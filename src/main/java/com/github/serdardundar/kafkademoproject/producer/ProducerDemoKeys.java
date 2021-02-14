@@ -27,7 +27,7 @@ public class ProducerDemoKeys {
         for (int i = 0; i < 100; i++) {
 
             //create a producer record
-            String topic = "fourth_topic";
+            String topic = "first_topic";
             String value = "hello world " + i;
             String key = "id_" + i;
 
@@ -47,16 +47,8 @@ public class ProducerDemoKeys {
                 } else {
                     log.error("Error while producing", e);
                 }
-            }).get();
+            }).get(); // don't use get in prod
         }
-
-        //producer.close();
-
-        //flush data
-        producer.flush();
-
         producer.close();
-        //flush and close producer
-
     }
 }
