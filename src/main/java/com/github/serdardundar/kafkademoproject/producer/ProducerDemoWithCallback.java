@@ -12,17 +12,11 @@ import java.util.Properties;
 public class ProducerDemoWithCallback {
 
     public static void main(String[] args) {
-
-
-
-
-
         //create Producer properties
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
 
         //create the Producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
@@ -46,16 +40,7 @@ public class ProducerDemoWithCallback {
                     log.error("Error while producing", e);
                 }
             });
-
-
         }
-
         producer.close();
-
-        //flush data
-        //producer.flush();
-
-        //flush and close producer
-
     }
 }
