@@ -1,4 +1,4 @@
-package com.github.serdardundar.kafkademoproject.consumer;
+package com.github.serdardundar.kafka.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

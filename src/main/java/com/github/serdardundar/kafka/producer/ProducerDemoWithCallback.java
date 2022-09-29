@@ -1,19 +1,19 @@
-package com.github.serdardundar.kafkademoproject.producer;
+package com.github.serdardundar.kafka.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.internals.DefaultPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
-public class ProducerDemoKeys {
+public class ProducerDemoWithCallback {
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-
+    public static void main(String[] args) {
         //create Producer properties
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
@@ -23,30 +23,33 @@ public class ProducerDemoKeys {
         //create the Producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
 
             //create a producer record
-            String topic = "first_topic";
-            String value = "hello world " + i;
-            String key = "id_" + i;
+            ProducerRecord<String, String> recordForJava = new ProducerRecord<>("demo_java", "hello java " + i);
 
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
-
-            log.info("Key: " + key);
             //send data - async
-            producer.send(record, (recordMetadata, e) -> {
+            producer.send(recordForJava, (recordMetadata, e) -> {
                 if (e == null) {
                     //the record sent successfully
                     log.info("\n" +
-                            "Received new metadata --> \n" +
-                            "Topic: " + recordMetadata.topic() + "\n" +
-                            "Partition: " + recordMetadata.partition() + "\n" +
-                            "Offset: " + recordMetadata.offset() + " \n" +
-                            "Timestamp: " + recordMetadata.timestamp());
+                        "Received new metadata/ \n" +
+                        "Topic: " + recordMetadata.topic() + "\n" +
+                        "Partition: " + recordMetadata.partition() + "\n" +
+                        "Offset: " + recordMetadata.offset() + " \n" +
+                        "Date: " + new Date(recordMetadata.timestamp()));
                 } else {
                     log.error("Error while producing", e);
                 }
-            }).get(); // don't use get in prod
+            });
+
+            // this is added to prove to use the RoundRobinPartitioner implementation
+            // if you remove this try-catch, it will be StickyPartitioner implementation
+            /*   try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
         }
         producer.close();
     }

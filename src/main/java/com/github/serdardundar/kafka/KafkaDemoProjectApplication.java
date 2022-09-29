@@ -1,4 +1,4 @@
-package com.github.serdardundar.kafkademoproject;
+package com.github.serdardundar.kafka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,8 +1,10 @@
-package com.github.serdardundar.kafkademoproject.producer;
+package com.github.serdardundar.kafka.producer;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -12,6 +14,8 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 
 public class ProducerDemo {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProducerDemo.class.getName());
+
     public static void main(String[] args) {
 
         //create Producer properties
@@ -19,16 +23,16 @@ public class ProducerDemo {
         properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
+        LOG.info("Hello, World!");
 
         //create the Producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
         //create a producer record
-        ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "hello java 1");
+        ProducerRecord<String, String> recordForFirstTopic = new ProducerRecord<>("demo_java", "hello from java");
 
         //send data - async
-        producer.send(record);
+        producer.send(recordForFirstTopic);
 
         //flush data
         //producer.flush();

@@ -1,4 +1,4 @@
-package com.github.serdardundar.kafkademoproject;
+package com.github.serdardundar.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
