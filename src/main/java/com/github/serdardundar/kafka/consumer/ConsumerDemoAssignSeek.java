@@ -16,7 +16,7 @@ import java.util.Properties;
 public class ConsumerDemoAssignSeek {
     public static void main(String[] args) {
 
-        String topic = "first_topic";
+        String topic = "demo_java";
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());

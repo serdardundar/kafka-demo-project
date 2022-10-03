@@ -19,14 +19,14 @@ public class ConsumerDemoGroups {
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,  "my-second-kafka-app");
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,  "my-third-kafka-app");
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         //create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         //subscribe
-        consumer.subscribe(Collections.singleton("first_topic"));
+        consumer.subscribe(Collections.singleton("demo_java"));
 
         //poll for new data
         while (true) {

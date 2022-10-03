@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
@@ -21,33 +22,38 @@ public class ProducerDemoKeys {
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         //create the Producer
-        KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(properties); producer) {
 
-        for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
 
-            //create a producer record
-            String topic = "first_topic";
-            String value = "hello world " + i;
-            String key = "id_" + i;
+                //create a producer record
+                String topic = "demo_java";
+                String value = "hello world " + i;
 
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
+                //the same keys will be sent to the same partition
+                String key = "id_" + i;
 
-            log.info("Key: " + key);
-            //send data - async
-            producer.send(record, (recordMetadata, e) -> {
-                if (e == null) {
-                    //the record sent successfully
-                    log.info("\n" +
+                ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
+
+                log.info("Key: " + key);
+                //send data - async
+                producer.send(producerRecord, (recordMetadata, e) -> {
+                    if (e == null) {
+                        //the record sent successfully
+                        log.info("\n" +
                             "Received new metadata --> \n" +
                             "Topic: " + recordMetadata.topic() + "\n" +
+                            "Key: " + producerRecord.key() + "\n" +
                             "Partition: " + recordMetadata.partition() + "\n" +
                             "Offset: " + recordMetadata.offset() + " \n" +
                             "Timestamp: " + recordMetadata.timestamp());
-                } else {
-                    log.error("Error while producing", e);
-                }
-            }).get(); // don't use get in prod
+                    } else {
+                        log.error("Error while producing", e);
+                    }
+                }).get(); // don't use get in prod
+            }
+        } catch (KafkaException e) {
+            log.error("Error while producing", e);
         }
-        producer.close();
     }
 }

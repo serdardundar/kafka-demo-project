@@ -30,7 +30,7 @@ public class ConsumerDemoWithThread {
         CountDownLatch latch = new CountDownLatch(1);
 
         // create the consumer runnable
-        ConsumerRunnable consumerRunnable = new ConsumerRunnable("first_topic", latch);
+        ConsumerRunnable consumerRunnable = new ConsumerRunnable("demo_java", latch);
 
         // start the thread
         Thread myThread = new Thread(consumerRunnable);

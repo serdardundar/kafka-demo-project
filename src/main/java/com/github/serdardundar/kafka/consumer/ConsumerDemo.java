@@ -15,25 +15,29 @@ import java.util.Properties;
 public class ConsumerDemo {
 
     public static void main(String[] args) {
+
+        log.info("Starting Kafka Consumer");
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,  "my-first-kafka-app");
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,  "my-second-kafka-app");
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         //create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         //subscribe
-        consumer.subscribe(Collections.singleton("first_topic"));
+        consumer.subscribe(Collections.singleton("demo_java"));
 
         //poll for new data
         while (true) {
+            log.info("polling for new data");
+
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-            for (ConsumerRecord<String, String> record: records){
-                log.info("Key: " + record.key() + ", Value:" + record.value());
-                log.info("Partition: " + record.partition() + ", Offset: " + record.offset());
+            for (ConsumerRecord<String, String> consumerRecord: records){
+                log.info("Key: " + consumerRecord.key() + ", Value:" + consumerRecord.value());
+                log.info("Partition: " + consumerRecord.partition() + ", Offset: " + consumerRecord.offset());
             }
         }
     }
